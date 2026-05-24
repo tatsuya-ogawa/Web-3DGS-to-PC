@@ -1,0 +1,61 @@
+{
+  "name": "web-3dgs-to-pc",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Convert 3D Gaussian Splatting assets into dense point clouds and iso-surface meshes using WebGPU",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "browser": "dist/browser.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./browser": {
+      "types": "./dist/browser.d.ts",
+      "import": "./dist/browser.js"
+    }
+  },
+  "bin": {
+    "web-3dgs-to-pc": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
+    "prebuild": "npm run clean",
+    "build": "tsc",
+    "prepare": "npm run build",
+    "convert": "node dist/cli.js",
+    "synth": "node dist/dev/makeSyntheticSplat.js",
+    "examples:install": "npm install --prefix examples",
+    "examples:dev": "npm run dev --prefix examples",
+    "headless:install": "npm install --prefix tests/headless",
+    "headless:build": "tsc -p tests/headless/tsconfig.json",
+    "headless:run": "node tests/headless/dist/headless.js"
+  },
+  "devDependencies": {
+    "@sparkjsdev/spark": "^2.1.0",
+    "@types/node": "^22.10.0",
+    "@webgpu/types": "^0.1.70",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "author": "Tatsuya Ogawa",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tatsuya-ogawa/Web-3DGS-to-PC.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tatsuya-ogawa/Web-3DGS-to-PC/issues"
+  },
+  "homepage": "https://github.com/tatsuya-ogawa/Web-3DGS-to-PC#readme"
+}

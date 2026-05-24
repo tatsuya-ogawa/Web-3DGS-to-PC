@@ -1,0 +1,13 @@
+node_modules/
+dist/
+fixtures/*.splat
+fixtures/*.ply
+splats/*.sog
+
+# OS/System files
+.DS_Store
+Thumbs.db
+
+# Package build artifacts and outputs
+*.tgz
+*.ply

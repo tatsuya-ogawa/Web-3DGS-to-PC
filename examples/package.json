@@ -1,0 +1,19 @@
+{
+  "name": "web-3dgs-to-pc-examples",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "web-3dgs-to-pc": "file:..",
+    "three": "^0.184.0",
+    "@sparkjsdev/spark": "^2.1.0"
+  },
+  "devDependencies": {
+    "@types/three": "^0.184.1",
+    "vite": "^6.4.2"
+  }
+}

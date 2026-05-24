@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="data:," />
+    <title>3DGS TPS Voxel Physics Sandbox</title>
+    <style>
+      :root {
+        color: #18201f;
+        background: #f6f4ef;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+      }
+      body {
+        margin: 0;
+        overflow: hidden;
+        width: 100vw;
+        height: 100vh;
+      }
+      #canvas-host {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+      }
+      #canvas-host canvas {
+        width: 100% !important;
+        height: 100% !important;
+        display: block;
+      }
+      #overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 10;
+        background: rgba(24, 32, 31, 0.85);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+        text-align: center;
+        cursor: pointer;
+        backdrop-filter: blur(8px);
+        transition: opacity 250ms ease;
+      }
+      #overlay.hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+      .instructions {
+        max-width: 500px;
+        padding: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 12px;
+        background: rgba(251, 250, 247, 0.08);
+      }
+      .instructions h1 {
+        margin: 0 0 16px;
+        font-size: 24px;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+      }
+      .instructions p {
+        margin: 8px 0;
+        font-size: 14px;
+        color: #c9d1ce;
+      }
+      .instructions kbd {
+        background: #ffffff;
+        color: #18201f;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: 700;
+        font-size: 12px;
+      }
+      .hud {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        z-index: 5;
+        padding: 12px 16px;
+        border: 1px solid #cfd7d3;
+        border-radius: 8px;
+        background: rgba(251, 250, 247, 0.92);
+        backdrop-filter: blur(8px);
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        font-size: 12px;
+        pointer-events: auto;
+      }
+      .hud select, .hud button {
+        font-size: 12px;
+        padding: 4px 8px;
+        border: 1px solid #c8d1ce;
+        border-radius: 4px;
+        background: #ffffff;
+        cursor: pointer;
+      }
+      .hud button {
+        background: #263836;
+        color: #ffffff;
+        border-color: #263836;
+        font-weight: 600;
+        margin-top: 4px;
+      }
+      .hud button:hover {
+        background: #1c2a29;
+      }
+      .hud-line {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+      .hud-line span {
+        color: #5e6966;
+        font-weight: 600;
+      }
+      .hud-line strong {
+        color: #18201f;
+        font-weight: 700;
+      }
+      .hud input[type="file"] {
+        max-width: 180px;
+        font-size: 11px;
+      }
+      .hud input[type="checkbox"] {
+        cursor: pointer;
+        width: 16px;
+        height: 16px;
+        accent-color: #263836;
+        margin: 0;
+      }
+      #crosshair {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 10px;
+        height: 10px;
+        margin-left: -5px;
+        margin-top: -5px;
+        border: 2px solid rgba(255, 255, 255, 0.6);
+        border-radius: 50%;
+        z-index: 4;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="canvas-host"></div>
+    <div id="crosshair"></div>
+    <div id="overlay">
+      <div class="instructions">
+        <h1>3DGS TPS Voxel Physics Playground</h1>
+        <p>Click to Start, Then Drag to Rotate the Camera</p>
+        <p><kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> — Move</p>
+        <p><kbd>Space</kbd> — Jump</p>
+        <p><kbd>Drag</kbd> — Look Around</p>
+        <p><kbd>Esc</kbd> — Settings</p>
+      </div>
+    </div>
+    <div class="hud">
+      <div class="hud-line">
+        <span>Bundled Scene</span>
+        <select id="scene-select">
+          <option value="">No bundled scenes</option>
+        </select>
+      </div>
+      <div class="hud-line">
+        <span>Local File</span>
+        <input id="scene-file-input" type="file" accept=".sog,.spz,.splat,.ksplat,.ply" />
+      </div>
+      <div class="hud-line">
+        <span>Show Splat</span>
+        <input type="checkbox" id="splat-checkbox" checked />
+      </div>
+      <div class="hud-line" style="display: none;">
+        <span>Show Voxel</span>
+        <input type="checkbox" id="voxel-checkbox" />
+      </div>
+      <div class="hud-line">
+        <span>Heightfield</span>
+        <input type="checkbox" id="heightfield-checkbox" />
+      </div>
+      <div class="hud-line">
+        <span>Smooth Collision</span>
+        <input type="checkbox" id="smoothing-checkbox" checked />
+      </div>
+      <div class="hud-line">
+        <span>HF Style</span>
+        <select id="heightfield-style-select">
+          <option value="smooth-grid" selected>Smooth Grid</option>
+          <option value="holo-blocks">Holo-Blocks</option>
+        </select>
+      </div>
+      <div class="hud-line" style="display: none;">
+        <span>Terrain Data</span>
+        <select id="terrain-mode-select">
+          <option value="heightfield" selected>Heightfield</option>
+          <option value="both">Heightfield + Voxel</option>
+          <option value="voxels">Voxel</option>
+        </select>
+      </div>
+      <div class="hud-line" style="display: none;">
+        <span>Voxel Chunk</span>
+        <strong id="hud-chunk">-</strong>
+      </div>
+      <div class="hud-line">
+        <span>Player XYZ</span>
+        <strong id="hud-xyz">-</strong>
+      </div>
+      <div class="hud-line" style="display: none;">
+        <span>Voxel Size</span>
+        <strong>12.5 cm</strong>
+      </div>
+      <div class="hud-line" style="display: none;">
+        <span>Active Chunks</span>
+        <strong id="hud-active-chunks">0 / 0</strong>
+      </div>
+      <div class="hud-line">
+        <span>FPS</span>
+        <strong id="hud-fps">0</strong>
+      </div>
+      <button id="reset-player-btn">Respawn Character</button>
+    </div>
+    <script type="module" src="./src/tps.ts"></script>
+  </body>
+</html>

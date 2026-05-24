@@ -1,0 +1,13 @@
+{
+  "name": "web-3dgs-to-pc-headless-tests",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "web-3dgs-to-pc": "file:../..",
+    "playwright-core": "^1.60.0",
+    "vite": "^6.4.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0"
+  }
+}

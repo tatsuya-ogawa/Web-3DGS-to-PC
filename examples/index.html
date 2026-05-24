@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="data:," />
+    <title>Web 3DGS to Point Cloud Examples</title>
+    <style>
+      :root {
+        color: #18201f;
+        background: #f6f4ef;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+      }
+      main {
+        width: min(960px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 56px 0;
+      }
+      h1 {
+        margin: 0 0 12px;
+        font-size: clamp(32px, 6vw, 56px);
+        line-height: 1;
+        letter-spacing: 0;
+      }
+      .intro {
+        max-width: 700px;
+        margin: 0 0 32px;
+        color: #5e6966;
+        font-size: 17px;
+        line-height: 1.6;
+      }
+      .menu {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 16px;
+      }
+      .menu a {
+        display: grid;
+        gap: 10px;
+        min-height: 160px;
+        padding: 22px;
+        border: 1px solid #cfd7d3;
+        border-radius: 8px;
+        background: #ffffff;
+        color: inherit;
+        text-decoration: none;
+      }
+      .menu a:hover {
+        border-color: #7f908b;
+      }
+      .menu strong {
+        font-size: 20px;
+      }
+      .menu span {
+        color: #5e6966;
+        line-height: 1.5;
+      }
+      .format {
+        align-self: end;
+        color: #263836;
+        font-size: 13px;
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Web 3DGS Examples</h1>
+      <p class="intro">
+        Browser tools for turning 3D Gaussian Splatting files into point clouds,
+        meshes, voxel chunks, and heightfields. Choose a local 3DGS file after
+        opening an example.
+      </p>
+      <nav class="menu" aria-label="Examples">
+        <a href="./convert.html">
+          <strong>Point Cloud Converter</strong>
+          <span>Load a local 3DGS file, run the WebGPU voxel pipeline, and export point or mesh PLY files.</span>
+          <span class="format">.sog .spz .splat .ksplat .ply</span>
+        </a>
+        <a href="./tps.html">
+          <strong>Heightfield Walk Sandbox</strong>
+          <span>Load a local 3DGS file, generate chunked heightfield support, and walk across the scene.</span>
+          <span class="format">.sog .spz .splat .ksplat .ply</span>
+        </a>
+      </nav>
+    </main>
+  </body>
+</html>
